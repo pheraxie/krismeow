@@ -264,8 +264,8 @@
     }
 
     .video-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
     }
 
     .video-thumbnail {
@@ -276,6 +276,24 @@
 
     .video-info {
       padding: 16px;
+    }
+
+    .video-duration {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .video-date {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin-top: 8px;
     }
 
     .toggle-switch {
@@ -305,6 +323,30 @@
 
     .toggle-switch.active .toggle-slider {
       transform: translateX(30px);
+    }
+
+    .filter-btn {
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #667eea;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
     }
 
     .settings-card {
@@ -365,32 +407,20 @@
       <p class="text-xl sm:text-2xl text-white mb-4" id="constructionMsg">🚧 This site is still under construction 🚧</p>
       <p class="text-white/80 text-base sm:text-lg" id="aiIntro">Notre IA <span class="font-bold" id="aiNameDisplay">Pheraxie</span> vous accompagne dans cette aventure !</p>
      </div>
- <!-- YouTube/Content Page -->
-<div id="youtubePage" class="page-content hidden h-full">
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <h2 class="text-4xl font-bold text-white mb-8 text-center" id="youtubePageTitle">Contenu</h2>
-
-    <!-- Filtres et recherche -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-      <div class="flex gap-2 flex-wrap">
-        <button class="filter-btn bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded" data-filter="all">Pour vous</button>
-        <button class="filter-btn bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded" data-filter="recent">Récent</button>
-        <button class="filter-btn bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded" data-filter="short">Shorts</button>
-        <button class="filter-btn bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded" data-filter="playlist">Playlist</button>
-        <button class="filter-btn bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded" data-filter="random">Aléatoire</button>
+    </div><!-- YouTube/Content Page -->
+    <div id="youtubePage" class="page-content hidden h-full">
+     <div class="max-w-7xl mx-auto px-4 py-8">
+      <h2 class="text-4xl font-bold text-white mb-8 text-center" id="youtubePageTitle">Contenu</h2><!-- Search Bar -->
+      <div class="mb-6"><input type="search" id="searchBar" placeholder="Rechercher une vidéo..." class="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+      </div><!-- Filters -->
+      <div class="flex flex-wrap gap-3 mb-8 justify-center"><button class="filter-btn active" data-filter="foryou" data-fr="Pour vous" data-en="For You">Pour vous</button> <button class="filter-btn" data-filter="recent" data-fr="Récent" data-en="Recent">Récent</button> <button class="filter-btn" data-filter="shorts" data-fr="Shorts" data-en="Shorts">Shorts</button> <button class="filter-btn" data-filter="playlist" data-fr="Playlist" data-en="Playlist">Playlist</button> <button class="filter-btn" data-filter="random" data-fr="Aléatoire" data-en="Random">Aléatoire</button>
       </div>
-      <input type="text" id="searchInput" placeholder="Rechercher..." class="px-4 py-2 rounded border border-white/20 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 flex-1 md:max-w-sm">
-    </div>
-
-    <!-- Grille des vidéos -->
-    <div id="videoGrid" class="video-grid">
-      <div class="text-white text-center text-xl" id="loadingVideos">
+      <div id="videoGrid" class="video-grid">
+       <div class="text-white text-center text-xl" id="loadingVideos">
         Chargement des vidéos...
+       </div>
       </div>
-    </div>
-  </div>
-</div>
-
+     </div>
     </div><!-- Settings Page -->
     <div id="settingsPage" class="page-content hidden h-full overflow-auto">
      <div class="max-w-4xl mx-auto px-4 py-8">
@@ -448,13 +478,23 @@
    <div class="bg-gradient-to-r from-purple-100 to-indigo-100 p-4 rounded-lg">
     <p class="text-gray-800" id="aiMessage">This site is still under construction</p>
    </div>
+  </div><!-- Video Player Modal -->
+  <div id="videoPlayerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[2000] hidden flex items-center justify-center p-4">
+   <div class="relative w-full max-w-5xl bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20"><button id="closePlayerBtn" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full text-2xl font-bold transition-all">×</button>
+    <div class="p-6">
+     <h3 id="playerVideoTitle" class="text-2xl font-bold text-white mb-4"></h3>
+     <div class="aspect-video rounded-lg overflow-hidden"><iframe id="playerIframe" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+     </div>
+     <p id="playerVideoDescription" class="text-white/80 mt-4"></p>
+    </div>
+   </div>
   </div>
   <script>
     const defaultConfig = {
       site_name: 'Krismeow',
       ai_name: 'Pheraxie',
       youtube_api_key: 'AIzaSyCxK7EkKo1QpxHuUmE1tTDNPirreFoYbPc',
-      youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
+     youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
       background_color: '#0a0e27',
       ai_bubble_color: '#667eea',
       text_color: '#ffffff',
@@ -466,6 +506,9 @@
     let currentLanguage = 'fr';
     let aiBubbleX = window.innerWidth - 150;
     let aiBubbleY = window.innerHeight / 2;
+    let allVideos = [];
+    let currentFilter = 'foryou';
+    let searchQuery = '';
 
     const translations = {
       fr: {
@@ -618,6 +661,13 @@
         link.textContent = link.getAttribute(`data-${currentLanguage}`);
       });
 
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.textContent = btn.getAttribute(`data-${currentLanguage}`);
+      });
+
+      const searchBar = document.getElementById('searchBar');
+      searchBar.placeholder = currentLanguage === 'fr' ? 'Rechercher une vidéo...' : 'Search for a video...';
+
       document.getElementById('homeTitle').textContent = `${t.welcomeTo} ${defaultConfig.site_name}`;
       document.getElementById('constructionMsg').textContent = t.construction;
       document.getElementById('aiIntro').innerHTML = `${t.aiIntro} <span class="font-bold" id="aiNameDisplay">${defaultConfig.ai_name}</span> ${t.accompanies}`;
@@ -629,6 +679,159 @@
       document.getElementById('languageLabel').textContent = t.languageLabel;
       document.getElementById('languageDesc').textContent = t.languageDesc;
       document.getElementById('aiMessage').textContent = t.aiMsg;
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-filter');
+        displayVideos();
+      });
+    });
+
+    // Search bar
+    document.getElementById('searchBar').addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase();
+      displayVideos();
+    });
+
+    // Video player
+    function openVideoPlayer(video) {
+      const modal = document.getElementById('videoPlayerModal');
+      const iframe = document.getElementById('playerIframe');
+      const title = document.getElementById('playerVideoTitle');
+      const description = document.getElementById('playerVideoDescription');
+
+      const videoId = video.id.videoId || video.id;
+      const embedUrl = video.id.kind === 'youtube#playlist' 
+        ? `https://www.youtube.com/embed/videoseries?list=${video.id.playlistId}`
+        : `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+
+      iframe.src = embedUrl;
+      title.textContent = video.snippet.title;
+      description.textContent = video.snippet.description;
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+    }
+
+    function closeVideoPlayer() {
+      const modal = document.getElementById('videoPlayerModal');
+      const iframe = document.getElementById('playerIframe');
+      iframe.src = '';
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
+
+    document.getElementById('closePlayerBtn').addEventListener('click', closeVideoPlayer);
+    document.getElementById('videoPlayerModal').addEventListener('click', (e) => {
+      if (e.target.id === 'videoPlayerModal') {
+        closeVideoPlayer();
+      }
+    });
+
+    // Display videos with filters
+    function displayVideos() {
+      const videoGrid = document.getElementById('videoGrid');
+      
+      if (allVideos.length === 0) {
+        return;
+      }
+
+      let filteredVideos = [...allVideos];
+
+      // Apply search filter
+      if (searchQuery) {
+        filteredVideos = filteredVideos.filter(video => 
+          video.snippet.title.toLowerCase().includes(searchQuery) ||
+          video.snippet.description.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Apply category filter
+      switch(currentFilter) {
+        case 'recent':
+          filteredVideos.sort((a, b) => 
+            new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt)
+          );
+          break;
+        case 'shorts':
+          filteredVideos = filteredVideos.filter(video => 
+            video.contentDetails && video.contentDetails.duration && 
+            parseDuration(video.contentDetails.duration) <= 60
+          );
+          break;
+        case 'playlist':
+          filteredVideos = filteredVideos.filter(video => 
+            video.id.kind === 'youtube#playlist'
+          );
+          break;
+        case 'random':
+          filteredVideos = shuffleArray(filteredVideos);
+          break;
+        case 'foryou':
+          filteredVideos = shuffleArray(filteredVideos);
+          break;
+      }
+
+      if (filteredVideos.length === 0) {
+        videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">Aucune vidéo trouvée</div>';
+        return;
+      }
+
+      videoGrid.innerHTML = filteredVideos.map(video => {
+        const videoId = video.id.videoId || video.id.playlistId || video.id;
+        const title = video.snippet.title;
+        const thumbnail = video.snippet.thumbnails.high.url;
+        const description = video.snippet.description.substring(0, 100) + '...';
+        const publishedAt = new Date(video.snippet.publishedAt).toLocaleDateString('fr-FR');
+        const duration = video.contentDetails ? formatDuration(video.contentDetails.duration) : '';
+
+        return `
+          <div class="video-card" onclick='openVideoPlayer(${JSON.stringify(video).replace(/'/g, "&#39;")})'>
+            <div class="relative">
+              <img src="${thumbnail}" alt="${title}" class="video-thumbnail" onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none';">
+              ${duration ? `<span class="video-duration">${duration}</span>` : ''}
+            </div>
+            <div class="video-info">
+              <h3 class="text-white font-semibold mb-2">${title}</h3>
+              <p class="text-white/60 text-sm mb-2">${description}</p>
+              <p class="video-date">${publishedAt}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Helper functions
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function parseDuration(duration) {
+      const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+      const hours = parseInt(match[1]) || 0;
+      const minutes = parseInt(match[2]) || 0;
+      const seconds = parseInt(match[3]) || 0;
+      return hours * 3600 + minutes * 60 + seconds;
+    }
+
+    function formatDuration(duration) {
+      const seconds = parseDuration(duration);
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      
+      if (hours > 0) {
+        return `${hours}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+      return `${minutes}:${String(secs).padStart(2, '0')}`;
     }
 
     // Load YouTube videos
@@ -652,32 +855,47 @@
       }
 
       try {
-        const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=12&type=video`
+        // Fetch videos
+        const videosResponse = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet&order=date&maxResults=50&type=video`
         );
-        
-        const data = await response.json();
+        const videosData = await videosResponse.json();
 
-        if (data.items && data.items.length > 0) {
-          videoGrid.innerHTML = data.items.map(item => {
-            const videoId = item.id.videoId;
-            const title = item.snippet.title;
-            const thumbnail = item.snippet.thumbnails.high.url;
+        // Fetch playlists
+        const playlistsResponse = await fetch(
+          `https://www.googleapis.com/youtube/v3/playlists?key=${apiKey}&channelId=${channelId}&part=snippet&maxResults=10`
+        );
+        const playlistsData = await playlistsResponse.json();
 
-            return `
-              <div class="video-card" onclick="window.open('https://www.youtube.com/watch?v=${videoId}', '_blank', 'noopener,noreferrer')">
-                <img src="${thumbnail}" alt="${title}" class="video-thumbnail" onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none';">
-                <div class="video-info">
-                  <h3 class="text-white font-semibold line-clamp-2">${title}</h3>
-                </div>
-              </div>
-            `;
-          }).join('');
+        if (videosData.items) {
+          // Get video durations
+          const videoIds = videosData.items.map(item => item.id.videoId).join(',');
+          const detailsResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=contentDetails`
+          );
+          const detailsData = await detailsResponse.json();
+
+          // Merge duration data
+          videosData.items.forEach((video, index) => {
+            const details = detailsData.items.find(d => d.id === video.id.videoId);
+            if (details) {
+              video.contentDetails = details.contentDetails;
+            }
+          });
+
+          allVideos = [...videosData.items];
+          
+          if (playlistsData.items) {
+            allVideos = [...allVideos, ...playlistsData.items];
+          }
+
+          displayVideos();
         } else {
           videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">Aucune vidéo trouvée</div>';
         }
       } catch (error) {
         videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">Erreur lors du chargement des vidéos</div>';
+        console.error('Error loading videos:', error);
       }
     }
 
@@ -742,92 +960,6 @@
         ])
       });
     }
-
-    let allVideos = []; // Stocke toutes les vidéos récupérées
-
-async function loadYouTubeVideos() {
-  const videoGrid = document.getElementById('videoGrid');
-  const channelId = defaultConfig.youtube_channel_id;
-  const apiKey = defaultConfig.youtube_api_key;
-
-  videoGrid.innerHTML = `<div class="text-white text-center text-xl">Chargement des vidéos...</div>`;
-
-  if (!apiKey) {
-    videoGrid.innerHTML = `<div class="text-white text-center text-xl">⚙️ Veuillez configurer la clé API</div>`;
-    return;
-  }
-
-  try {
-    // Récupération des vidéos
-    const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=50&type=video,playlist`
-    );
-    const data = await response.json();
-
-    if (!data.items || data.items.length === 0) {
-      videoGrid.innerHTML = '<div class="text-white text-center text-xl">Aucune vidéo trouvée</div>';
-      return;
-    }
-
-    // Stocker les vidéos pour filtres et recherche
-    allVideos = data.items.map(item => ({
-      id: item.id.videoId || item.id.playlistId,
-      type: item.id.videoId ? 'video' : 'playlist',
-      title: item.snippet.title,
-      description: item.snippet.description,
-      thumbnail: item.snippet.thumbnails.high.url,
-      publishedAt: item.snippet.publishedAt
-    }));
-
-    displayVideos(allVideos);
-  } catch (error) {
-    console.error(error);
-    videoGrid.innerHTML = '<div class="text-white text-center text-xl">Erreur lors du chargement des vidéos</div>';
-  }
-}
-
-// Fonction pour afficher une liste de vidéos
-function displayVideos(videos) {
-  const videoGrid = document.getElementById('videoGrid');
-  if (videos.length === 0) {
-    videoGrid.innerHTML = '<div class="text-white text-center text-xl">Aucune vidéo trouvée</div>';
-    return;
-  }
-
-  videoGrid.innerHTML = videos.map(v => `
-    <div class="video-card" onclick="window.open('${v.type === 'video' ? `https://www.youtube.com/watch?v=${v.id}` : `https://www.youtube.com/playlist?list=${v.id}`}', '_blank')">
-      <img src="${v.thumbnail}" alt="${v.title}" class="video-thumbnail">
-      <div class="video-info">
-        <h3 class="text-white font-semibold line-clamp-2">${v.title}</h3>
-        <p class="text-white/70 text-sm line-clamp-3">${v.description}</p>
-        <p class="text-white/50 text-xs mt-1">${new Date(v.publishedAt).toLocaleDateString()}</p>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Filtres
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.getAttribute('data-filter');
-    let filtered = allVideos;
-
-    if (filter === 'recent') filtered = [...allVideos].sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-    if (filter === 'short') filtered = allVideos.filter(v => v.type === 'video' && v.duration && v.duration.includes('M0S')); // Approximation
-    if (filter === 'playlist') filtered = allVideos.filter(v => v.type === 'playlist');
-    if (filter === 'random') filtered = [...allVideos].sort(() => Math.random() - 0.5);
-
-    displayVideos(filtered);
-  });
-});
-
-// Recherche
-document.getElementById('searchInput').addEventListener('input', e => {
-  const query = e.target.value.toLowerCase();
-  const filtered = allVideos.filter(v => v.title.toLowerCase().includes(query) || v.description.toLowerCase().includes(query));
-  displayVideos(filtered);
-});
-
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b98ce41c7934ed3',t:'MTc2NzY3NzI0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b994283b092739a',t:'MTc2NzY4MjAwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
