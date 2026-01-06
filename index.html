@@ -234,7 +234,7 @@
       position: absolute;
       bottom: -15px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateX(25px);
       width: 20px;
       height: 20px;
       background: rgba(255, 255, 255, 0.15);
@@ -250,7 +250,7 @@
       position: absolute;
       bottom: -28px;
       left: 50%;
-      transform: translateX(-50%) translateX(-15px);
+      transform: translateX(-50%) translateX(15px);
       width: 12px;
       height: 12px;
       background: rgba(255, 255, 255, 0.15);
@@ -521,7 +521,26 @@
       }
 
       .desktop-nav {
+        display: flex;
+        gap: 2px;
+        flex-wrap: nowrap;
+      }
+
+      .nav-link {
+        padding: 8px 10px !important;
+        font-size: 18px;
+      }
+
+      .nav-text-desktop {
         display: none;
+      }
+
+      .nav-icon-mobile {
+        display: inline;
+      }
+
+      #siteName {
+        font-size: 18px;
       }
 
       .ai-bubble {
@@ -571,6 +590,32 @@
         bottom: 20px;
         right: 20px;
       }
+
+      h1 {
+        font-size: 2rem !important;
+      }
+
+      h2 {
+        font-size: 1.5rem !important;
+      }
+
+      .bg-white\/10 p {
+        font-size: 1rem !important;
+      }
+
+      #playerVideoTitle {
+        font-size: 1.25rem !important;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .nav-icon-mobile {
+        display: none;
+      }
+
+      .nav-text-desktop {
+        display: inline;
+      }
     }
 
     @media (min-width: 769px) {
@@ -585,12 +630,12 @@
  <body class="h-full w-full overflow-hidden">
   <div class="starry-sky night" id="starrySky"></div>
   <div class="relative z-10 h-full w-full flex flex-col">
-   <nav class="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 backdrop-blur-md border-b border-white/10" id="navbar">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="flex items-center justify-between h-16">
+   <nav class="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-50" id="navbar">
+    <div class="w-full px-2 sm:px-4 lg:px-8">
+     <div class="flex items-center justify-between h-14 sm:h-16">
       <div class="flex items-center"><span class="text-white text-2xl font-bold" id="siteName">Krismeow</span>
       </div>
-      <div class="desktop-nav flex space-x-4"><button class="nav-link active px-3 py-2 text-white font-medium" data-page="home" id="navHome">Home</button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="youtube" id="navContent">Content</button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="settings" id="navSettings">Settings</button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="other" id="navOther">Extra</button>
+      <div class="desktop-nav flex space-x-4"><button class="nav-link active px-3 py-2 text-white font-medium" data-page="home" id="navHome"> <span class="nav-icon-mobile">🏠</span> <span class="nav-text-desktop">Home</span> </button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="youtube" id="navContent"> <span class="nav-icon-mobile">🎬</span> <span class="nav-text-desktop">Content</span> </button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="settings" id="navSettings"> <span class="nav-icon-mobile">⚙️</span> <span class="nav-text-desktop">Settings</span> </button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="other" id="navOther"> <span class="nav-icon-mobile">➕</span> <span class="nav-text-desktop">Extra</span> </button>
       </div>
       <div class="hamburger" id="hamburger"><span></span> <span></span> <span></span>
       </div>
@@ -645,7 +690,7 @@
         <div class="flex items-center gap-3 sm:gap-4"><span class="text-white text-sm sm:text-base">🇬🇧 EN</span>
          <div class="toggle-switch" id="languageToggle">
           <div class="toggle-slider"></div>
-         </div><span class="text-white text-sm sm:text-base">🇫🇷 FR</span>
+         </div><span class="text-white text-sm sm:text-base">��🇷 FR</span>
         </div>
        </div>
       </div>
@@ -709,7 +754,7 @@
     const defaultConfig = {
       site_name: 'Krismeow',
       ai_name: 'Pheraxie',
-     youtube_api_key: 'AIzaSyCxK7EkKo1QpxHuUmE1tTDNPirreFoYbPc',
+      youtube_api_key: 'AIzaSyCxK7EkKo1QpxHuUmE1tTDNPirreFoYbPc',
 youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
       background_color: '#0a0e27',
       ai_bubble_color: '#667eea',
@@ -720,7 +765,7 @@ youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
 
     let currentTheme = 'night';
     let currentLanguage = 'en';
-    let aiBubbleX = window.innerWidth - 150;
+    let aiBubbleX = window.innerWidth - 200;
     let aiBubbleY = window.innerHeight / 2;
     let allVideos = [];
     let currentFilter = 'random';
@@ -784,7 +829,7 @@ youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
           ],
           video: [
             '🎥 Enjoying the video?',
-            '👀 Don\'t forget to like and subscribe!',
+            '���� Don\'t forget to like and subscribe!',
             '📖 Check out the description below!',
             '⏮️ You can go back anytime!'
           ],
@@ -1117,10 +1162,15 @@ youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
     function updateLanguage() {
       const t = translations[currentLanguage];
       
-      document.getElementById('navHome').textContent = t.home;
-      document.getElementById('navContent').textContent = t.content;
-      document.getElementById('navSettings').textContent = t.settings;
-      document.getElementById('navOther').textContent = t.other;
+      const navHome = document.getElementById('navHome');
+      const navContent = document.getElementById('navContent');
+      const navSettings = document.getElementById('navSettings');
+      const navOther = document.getElementById('navOther');
+      
+      navHome.querySelector('.nav-text-desktop').textContent = t.home;
+      navContent.querySelector('.nav-text-desktop').textContent = t.content;
+      navSettings.querySelector('.nav-text-desktop').textContent = t.settings;
+      navOther.querySelector('.nav-text-desktop').textContent = t.other;
       
       document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
         const page = link.getAttribute('data-page');
@@ -1343,7 +1393,7 @@ youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
       const apiKey = defaultConfig.youtube_api_key;
 
       if (!apiKey) {
-        const linkText = currentLanguage === 'fr' ? 'Visiter la chaîne YouTube →' : 'Visit YouTube Channel →';
+        const linkText = currentLanguage === 'fr' ? 'Visiter la chaîne YouTube ����' : 'Visit YouTube Channel →';
         const configText = currentLanguage === 'fr' ? '⚙️ Configuration requise' : '⚙️ Configuration required';
         const instrText = currentLanguage === 'fr' 
           ? 'Veuillez ajouter votre clé API YouTube dans les paramètres éditables pour afficher les vidéos.'
@@ -1480,5 +1530,5 @@ youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b99ef0135bc4ed3',t:'MTc2NzY4OTA2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b9a09f501de739a',t:'MTc2NzY5MDE3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
