@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" class="h-full">
+<html lang="en" class="h-full">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,6 +229,7 @@
     .nav-link {
       position: relative;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .nav-link::after {
@@ -247,10 +248,59 @@
       width: 100%;
     }
 
+    .mobile-menu {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 62, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 999;
+      display: none;
+    }
+
+    .mobile-menu.active {
+      transform: translateY(0);
+      opacity: 1;
+      display: block;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(8px, 8px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
     .video-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .video-card {
@@ -275,7 +325,7 @@
     }
 
     .video-info {
-      padding: 16px;
+      padding: 12px;
     }
 
     .video-duration {
@@ -292,8 +342,8 @@
 
     .video-date {
       color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
-      margin-top: 8px;
+      font-size: 13px;
+      margin-top: 6px;
     }
 
     .toggle-switch {
@@ -304,6 +354,7 @@
       border-radius: 15px;
       cursor: pointer;
       transition: background 0.3s;
+      flex-shrink: 0;
     }
 
     .toggle-switch.active {
@@ -326,7 +377,7 @@
     }
 
     .filter-btn {
-      padding: 10px 24px;
+      padding: 10px 20px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -335,6 +386,10 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
     }
 
     .filter-btn:hover {
@@ -359,6 +414,14 @@
     }
 
     @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .desktop-nav {
+        display: none;
+      }
+
       .ai-bubble {
         width: 70px;
         height: 70px;
@@ -381,85 +444,128 @@
 
       .video-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .filter-btn span.desktop-text {
+        display: none;
+      }
+
+      .player-content {
+        padding: 10px;
+      }
+
+      .player-video-wrapper {
+        margin-bottom: 10px;
+      }
+
+      .settings-card {
+        padding: 16px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .filter-btn span.mobile-icon {
+        display: none;
       }
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full overflow-hidden"><!-- Animated Starry Sky Background -->
-  <div class="starry-sky night" id="starrySky"></div><!-- Main Content Container -->
-  <div class="relative z-10 h-full flex flex-col"><!-- Navigation -->
+ <body class="h-full w-full overflow-hidden">
+  <div class="starry-sky night" id="starrySky"></div>
+  <div class="relative z-10 h-full w-full flex flex-col">
    <nav class="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 backdrop-blur-md border-b border-white/10" id="navbar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="flex items-center justify-between h-16">
       <div class="flex items-center"><span class="text-white text-2xl font-bold" id="siteName">Krismeow</span>
       </div>
-      <div class="flex space-x-1 sm:space-x-4"><button class="nav-link active px-3 py-2 text-white text-sm sm:text-base font-medium" data-page="home" data-fr="Accueil" data-en="Home">Accueil</button> <button class="nav-link px-3 py-2 text-white text-sm sm:text-base font-medium" data-page="youtube" data-fr="Contenu" data-en="Content">Contenu</button> <button class="nav-link px-3 py-2 text-white text-sm sm:text-base font-medium" data-page="settings" data-fr="Paramètres" data-en="Settings">Paramètres</button> <button class="nav-link px-3 py-2 text-white text-sm sm:text-base font-medium" data-page="other" data-fr="Autres" data-en="Other">Autres</button>
+      <div class="desktop-nav flex space-x-4"><button class="nav-link active px-3 py-2 text-white font-medium" data-page="home" id="navHome">Home</button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="youtube" id="navContent">Content</button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="settings" id="navSettings">Settings</button> <button class="nav-link px-3 py-2 text-white font-medium" data-page="other" id="navOther">Other</button>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span> <span></span> <span></span>
       </div>
      </div>
     </div>
-   </nav><!-- Page Content -->
-   <main class="flex-1 overflow-auto"><!-- Home Page -->
+   </nav>
+   <div class="mobile-menu" id="mobileMenu"><button class="mobile-nav-link w-full text-left py-3 px-4 text-white font-medium hover:bg-white/10 rounded-lg transition-all active" data-page="home">Home</button> <button class="mobile-nav-link w-full text-left py-3 px-4 text-white font-medium hover:bg-white/10 rounded-lg transition-all" data-page="youtube">Content</button> <button class="mobile-nav-link w-full text-left py-3 px-4 text-white font-medium hover:bg-white/10 rounded-lg transition-all" data-page="settings">Settings</button> <button class="mobile-nav-link w-full text-left py-3 px-4 text-white font-medium hover:bg-white/10 rounded-lg transition-all" data-page="other">Other</button>
+   </div>
+   <main class="flex-1 overflow-auto w-full">
     <div id="homePage" class="page-content h-full flex flex-col items-center justify-center px-4 text-center">
-     <h1 class="text-5xl sm:text-7xl font-bold text-white mb-6 animate-pulse" id="homeTitle">Bienvenue sur Krismeow</h1>
-     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 max-w-2xl">
-      <p class="text-xl sm:text-2xl text-white mb-4" id="constructionMsg">🚧 This site is still under construction 🚧</p>
-      <p class="text-white/80 text-base sm:text-lg" id="aiIntro">Notre IA <span class="font-bold" id="aiNameDisplay">Pheraxie</span> vous accompagne dans cette aventure !</p>
+     <h1 class="text-4xl sm:text-7xl font-bold text-white mb-6 animate-pulse" id="homeTitle">Welcome to Krismeow</h1>
+     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 sm:p-8 max-w-2xl w-full">
+      <p class="text-lg sm:text-2xl text-white mb-4" id="constructionMsg">🚧 This site is still under construction 🚧</p>
+      <p class="text-white/80 text-sm sm:text-lg" id="aiIntro">Our assistant <span class="font-bold" id="aiNameDisplay">Pheraxie</span> accompanies you on this adventure!</p>
      </div>
-    </div><!-- YouTube/Content Page -->
-    <div id="youtubePage" class="page-content hidden h-full">
-     <div class="max-w-7xl mx-auto px-4 py-8">
-      <h2 class="text-4xl font-bold text-white mb-8 text-center" id="youtubePageTitle">Contenu</h2><!-- Search Bar -->
-      <div class="mb-6"><input type="search" id="searchBar" placeholder="Rechercher une vidéo..." class="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
-      </div><!-- Filters -->
-      <div class="flex flex-wrap gap-3 mb-8 justify-center"><button class="filter-btn active" data-filter="foryou" data-fr="Pour vous" data-en="For You">Pour vous</button> <button class="filter-btn" data-filter="recent" data-fr="Récent" data-en="Recent">Récent</button> <button class="filter-btn" data-filter="shorts" data-fr="Shorts" data-en="Shorts">Shorts</button> <button class="filter-btn" data-filter="playlist" data-fr="Playlist" data-en="Playlist">Playlist</button> <button class="filter-btn" data-filter="random" data-fr="Aléatoire" data-en="Random">Aléatoire</button>
+    </div>
+    <div id="youtubePage" class="page-content hidden h-full w-full">
+     <div class="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 text-center" id="youtubePageTitle">Content</h2>
+      <div class="mb-4 sm:mb-6"><input type="search" id="searchBar" placeholder="Search for a video..." class="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+      </div>
+      <div class="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8 justify-center"><button class="filter-btn active" data-filter="random"> <span class="mobile-icon">🔀</span> <span class="desktop-text">Random</span> </button> <button class="filter-btn" data-filter="recent"> <span class="mobile-icon">🕐</span> <span class="desktop-text">Recent</span> </button> <button class="filter-btn" data-filter="shorts"> <span class="mobile-icon">⚡</span> <span class="desktop-text">Shorts</span> </button> <button class="filter-btn" data-filter="playlist"> <span class="mobile-icon">📂</span> <span class="desktop-text">Playlist</span> </button>
       </div>
       <div id="videoGrid" class="video-grid">
-       <div class="text-white text-center text-xl" id="loadingVideos">
-        Chargement des vidéos...
+       <div class="text-white text-center text-xl col-span-full" id="loadingVideos">
+        Loading videos...
        </div>
       </div>
      </div>
-    </div><!-- Settings Page -->
-    <div id="settingsPage" class="page-content hidden h-full overflow-auto">
-     <div class="max-w-4xl mx-auto px-4 py-8">
-      <h2 class="text-4xl font-bold text-white mb-8" id="settingsTitle">Paramètres</h2><!-- Theme Setting -->
+    </div>
+    <div id="settingsPage" class="page-content hidden h-full overflow-auto w-full">
+     <div class="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 sm:mb-8" id="settingsTitle">Settings</h2>
       <div class="settings-card">
-       <div class="flex items-center justify-between">
-        <div>
-         <h3 class="text-white text-xl font-semibold mb-2" id="themeLabel">Thème</h3>
-         <p class="text-white/70" id="themeDesc">Basculer entre le mode jour et nuit</p>
+       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex-1">
+         <h3 class="text-white text-lg sm:text-xl font-semibold mb-2" id="themeLabel">Theme</h3>
+         <p class="text-white/70 text-sm sm:text-base" id="themeDesc">Switch between day and night mode</p>
         </div>
-        <div class="flex items-center gap-4"><span class="text-white" id="dayLabel">☀️ Jour</span>
+        <div class="flex items-center gap-3 sm:gap-4"><span class="text-white text-sm sm:text-base" id="dayLabel">☀️ Day</span>
          <div class="toggle-switch" id="themeToggle">
           <div class="toggle-slider"></div>
-         </div><span class="text-white" id="nightLabel">🌙 Nuit</span>
+         </div><span class="text-white text-sm sm:text-base" id="nightLabel">🌙 Night</span>
         </div>
        </div>
-      </div><!-- Language Setting -->
+      </div>
       <div class="settings-card">
-       <div class="flex items-center justify-between">
-        <div>
-         <h3 class="text-white text-xl font-semibold mb-2" id="languageLabel">Langue</h3>
-         <p class="text-white/70" id="languageDesc">Choisir la langue de l'interface</p>
+       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex-1">
+         <h3 class="text-white text-lg sm:text-xl font-semibold mb-2" id="languageLabel">Language</h3>
+         <p class="text-white/70 text-sm sm:text-base" id="languageDesc">Choose the interface language</p>
         </div>
-        <div class="flex items-center gap-4"><span class="text-white">🇫🇷 FR</span>
+        <div class="flex items-center gap-3 sm:gap-4"><span class="text-white text-sm sm:text-base">🇬🇧 EN</span>
          <div class="toggle-switch" id="languageToggle">
           <div class="toggle-slider"></div>
-         </div><span class="text-white">🇬🇧 EN</span>
+         </div><span class="text-white text-sm sm:text-base">🇫🇷 FR</span>
         </div>
        </div>
       </div>
      </div>
-    </div><!-- Other Pages Placeholder -->
+    </div><!-- Video Player Page -->
+    <div id="videoPage" class="page-content hidden h-full overflow-auto w-full">
+     <div class="max-w-6xl mx-auto px-4 py-6"><!-- Back Button --> <button id="backToVideosBtn" class="flex items-center gap-2 text-white mb-4 hover:text-purple-300 transition-colors"> <span class="text-2xl">←</span> <span class="font-semibold">Retour</span> </button> <!-- Video Player -->
+      <div class="bg-black rounded-lg overflow-hidden mb-6">
+       <div class="aspect-video w-full"><iframe id="playerIframe" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+       </div>
+      </div><!-- Video Info -->
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6">
+       <h2 id="playerVideoTitle" class="text-2xl sm:text-3xl font-bold text-white mb-3"></h2>
+       <p id="playerVideoDate" class="text-white/60 text-sm mb-4"></p>
+       <div class="border-t border-white/20 pt-4">
+        <h3 class="text-white font-semibold mb-2">Description</h3>
+        <p id="playerVideoDescription" class="text-white/80 text-sm leading-relaxed whitespace-pre-line"></p>
+       </div>
+      </div>
+     </div>
+    </div>
     <div id="otherPage" class="page-content hidden h-full flex items-center justify-center">
      <div class="text-white text-9xl opacity-30">
       +
      </div>
     </div>
    </main>
-  </div><!-- AI Bubble (Pheraxie) -->
+  </div>
   <div class="ai-bubble" id="aiBubble">
    <div class="ai-eyes">
     <div class="ai-eye">
@@ -470,7 +576,7 @@
     </div>
    </div>
    <div class="ai-mouth"></div>
-  </div><!-- AI Chat Box -->
+  </div>
   <div class="ai-chat" id="aiChat">
    <div class="flex items-center justify-between mb-4">
     <h3 class="text-xl font-bold text-purple-900" id="aiChatName">Pheraxie</h3><button id="closeChatBtn" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">×</button>
@@ -478,23 +584,13 @@
    <div class="bg-gradient-to-r from-purple-100 to-indigo-100 p-4 rounded-lg">
     <p class="text-gray-800" id="aiMessage">This site is still under construction</p>
    </div>
-  </div><!-- Video Player Modal -->
-  <div id="videoPlayerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[2000] hidden flex items-center justify-center p-4">
-   <div class="relative w-full max-w-5xl bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20"><button id="closePlayerBtn" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full text-2xl font-bold transition-all">×</button>
-    <div class="p-6">
-     <h3 id="playerVideoTitle" class="text-2xl font-bold text-white mb-4"></h3>
-     <div class="aspect-video rounded-lg overflow-hidden"><iframe id="playerIframe" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-     </div>
-     <p id="playerVideoDescription" class="text-white/80 mt-4"></p>
-    </div>
-   </div>
   </div>
   <script>
     const defaultConfig = {
       site_name: 'Krismeow',
       ai_name: 'Pheraxie',
       youtube_api_key: 'AIzaSyCxK7EkKo1QpxHuUmE1tTDNPirreFoYbPc',
-     youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
+      youtube_channel_id: 'UCD5a6vntQBSRqZWbPjNo1ig',
       background_color: '#0a0e27',
       ai_bubble_color: '#667eea',
       text_color: '#ffffff',
@@ -503,32 +599,15 @@
     };
 
     let currentTheme = 'night';
-    let currentLanguage = 'fr';
+    let currentLanguage = 'en';
     let aiBubbleX = window.innerWidth - 150;
     let aiBubbleY = window.innerHeight / 2;
     let allVideos = [];
-    let currentFilter = 'foryou';
+    let currentFilter = 'random';
     let searchQuery = '';
+    let previousPage = 'youtube';
 
     const translations = {
-      fr: {
-        home: 'Accueil',
-        content: 'Contenu',
-        settings: 'Paramètres',
-        other: 'Autres',
-        welcomeTo: 'Bienvenue sur',
-        construction: '🚧 Ce site est encore en construction 🚧',
-        aiIntro: 'Notre IA',
-        accompanies: 'vous accompagne dans cette aventure !',
-        contentTitle: 'Contenu',
-        loadingVideos: 'Chargement des vidéos...',
-        settingsTitle: 'Paramètres',
-        themeLabel: 'Thème',
-        themeDesc: 'Basculer entre le mode jour et nuit',
-        languageLabel: 'Langue',
-        languageDesc: "Choisir la langue de l'interface",
-        aiMsg: 'Ce site est encore en construction'
-      },
       en: {
         home: 'Home',
         content: 'Content',
@@ -536,7 +615,7 @@
         other: 'Other',
         welcomeTo: 'Welcome to',
         construction: '🚧 This site is still under construction 🚧',
-        aiIntro: 'Our AI',
+        aiIntro: 'Our assistant',
         accompanies: 'accompanies you on this adventure!',
         contentTitle: 'Content',
         loadingVideos: 'Loading videos...',
@@ -545,11 +624,30 @@
         themeDesc: 'Switch between day and night mode',
         languageLabel: 'Language',
         languageDesc: 'Choose the interface language',
-        aiMsg: 'This site is still under construction'
+        aiMsg: 'This site is still under construction',
+        searchPlaceholder: 'Search for a video...'
+      },
+      fr: {
+        home: 'Accueil',
+        content: 'Contenu',
+        settings: 'Paramètres',
+        other: 'Autres',
+        welcomeTo: 'Bienvenue sur',
+        construction: '🚧 Ce site est encore en construction 🚧',
+        aiIntro: 'Notre assistant',
+        accompanies: 'vous accompagne dans cette aventure !',
+        contentTitle: 'Contenu',
+        loadingVideos: 'Chargement des vidéos...',
+        settingsTitle: 'Paramètres',
+        themeLabel: 'Thème',
+        themeDesc: 'Basculer entre le mode jour et nuit',
+        languageLabel: 'Langue',
+        languageDesc: "Choisir la langue de l'interface",
+        aiMsg: 'Ce site est encore en construction',
+        searchPlaceholder: 'Rechercher une vidéo...'
       }
     };
 
-    // Create starry sky
     function createStars() {
       const sky = document.getElementById('starrySky');
       const starCount = 200;
@@ -563,75 +661,104 @@
         const top = Math.random() * 100;
         const delay = Math.random() * 3;
 
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.left = `${left}%`;
-        star.style.top = `${top}%`;
-        star.style.animationDelay = `${delay}s`;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = left + '%';
+        star.style.top = top + '%';
+        star.style.animationDelay = delay + 's';
 
         sky.appendChild(star);
       }
 
-      // Create shooting stars periodically
-      setInterval(() => {
+      setInterval(function() {
         const shootingStar = document.createElement('div');
         shootingStar.className = 'shooting-star';
-        shootingStar.style.left = `${Math.random() * 50}%`;
-        shootingStar.style.top = `${Math.random() * 50}%`;
+        shootingStar.style.left = (Math.random() * 50) + '%';
+        shootingStar.style.top = (Math.random() * 50) + '%';
         sky.appendChild(shootingStar);
 
-        setTimeout(() => shootingStar.remove(), 2000);
+        setTimeout(function() {
+          shootingStar.remove();
+        }, 2000);
       }, 3000);
     }
 
-    // AI Bubble floating movement
     function moveAIBubble() {
       const bubble = document.getElementById('aiBubble');
       const maxX = window.innerWidth - 120;
       const maxY = window.innerHeight - 120;
 
-      setInterval(() => {
+      setInterval(function() {
         aiBubbleX += (Math.random() - 0.5) * 3;
         aiBubbleY += (Math.random() - 0.5) * 3;
 
         aiBubbleX = Math.max(20, Math.min(maxX, aiBubbleX));
         aiBubbleY = Math.max(20, Math.min(maxY, aiBubbleY));
 
-        bubble.style.left = `${aiBubbleX}px`;
-        bubble.style.top = `${aiBubbleY}px`;
+        bubble.style.left = aiBubbleX + 'px';
+        bubble.style.top = aiBubbleY + 'px';
       }, 50);
     }
 
-    // AI Chat toggle
-    document.getElementById('aiBubble').addEventListener('click', () => {
+    document.getElementById('aiBubble').addEventListener('click', function() {
       document.getElementById('aiChat').classList.toggle('active');
     });
 
-    document.getElementById('closeChatBtn').addEventListener('click', () => {
+    document.getElementById('closeChatBtn').addEventListener('click', function() {
       document.getElementById('aiChat').classList.remove('active');
     });
 
-    // Navigation
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+    });
+
     const navLinks = document.querySelectorAll('.nav-link');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
     const pages = document.querySelectorAll('.page-content');
 
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
+    function navigateToPage(targetPage) {
+      navLinks.forEach(function(l) {
+        l.classList.remove('active');
+      });
+      mobileNavLinks.forEach(function(l) {
+        l.classList.remove('active');
+      });
+      
+      document.querySelectorAll('[data-page="' + targetPage + '"]').forEach(function(l) {
+        l.classList.add('active');
+      });
+
+      pages.forEach(function(page) {
+        page.classList.add('hidden');
+      });
+      document.getElementById(targetPage + 'Page').classList.remove('hidden');
+
+      hamburger.classList.remove('active');
+      mobileMenu.classList.remove('active');
+
+      if (targetPage === 'youtube') {
+        loadYouTubeVideos();
+      }
+    }
+
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
         const targetPage = link.getAttribute('data-page');
-        
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-
-        pages.forEach(page => page.classList.add('hidden'));
-        document.getElementById(`${targetPage}Page`).classList.remove('hidden');
-
-        if (targetPage === 'youtube') {
-          loadYouTubeVideos();
-        }
+        navigateToPage(targetPage);
       });
     });
 
-    // Theme toggle
+    mobileNavLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        const targetPage = link.getAttribute('data-page');
+        navigateToPage(targetPage);
+      });
+    });
+
     document.getElementById('themeToggle').addEventListener('click', function() {
       this.classList.toggle('active');
       const sky = document.getElementById('starrySky');
@@ -647,30 +774,31 @@
       }
     });
 
-    // Language toggle
     document.getElementById('languageToggle').addEventListener('click', function() {
       this.classList.toggle('active');
-      currentLanguage = this.classList.contains('active') ? 'en' : 'fr';
+      currentLanguage = this.classList.contains('active') ? 'fr' : 'en';
       updateLanguage();
     });
 
     function updateLanguage() {
       const t = translations[currentLanguage];
       
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.textContent = link.getAttribute(`data-${currentLanguage}`);
-      });
-
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.textContent = btn.getAttribute(`data-${currentLanguage}`);
+      document.getElementById('navHome').textContent = t.home;
+      document.getElementById('navContent').textContent = t.content;
+      document.getElementById('navSettings').textContent = t.settings;
+      document.getElementById('navOther').textContent = t.other;
+      
+      document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
+        const page = link.getAttribute('data-page');
+        link.textContent = t[page];
       });
 
       const searchBar = document.getElementById('searchBar');
-      searchBar.placeholder = currentLanguage === 'fr' ? 'Rechercher une vidéo...' : 'Search for a video...';
+      searchBar.placeholder = t.searchPlaceholder;
 
-      document.getElementById('homeTitle').textContent = `${t.welcomeTo} ${defaultConfig.site_name}`;
+      document.getElementById('homeTitle').textContent = t.welcomeTo + ' ' + defaultConfig.site_name;
       document.getElementById('constructionMsg').textContent = t.construction;
-      document.getElementById('aiIntro').innerHTML = `${t.aiIntro} <span class="font-bold" id="aiNameDisplay">${defaultConfig.ai_name}</span> ${t.accompanies}`;
+      document.getElementById('aiIntro').innerHTML = t.aiIntro + ' <span class="font-bold" id="aiNameDisplay">' + defaultConfig.ai_name + '</span> ' + t.accompanies;
       document.getElementById('youtubePageTitle').textContent = t.contentTitle;
       document.getElementById('loadingVideos').textContent = t.loadingVideos;
       document.getElementById('settingsTitle').textContent = t.settingsTitle;
@@ -681,57 +809,61 @@
       document.getElementById('aiMessage').textContent = t.aiMsg;
     }
 
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(function(b) {
+          b.classList.remove('active');
+        });
         btn.classList.add('active');
         currentFilter = btn.getAttribute('data-filter');
         displayVideos();
       });
     });
 
-    // Search bar
-    document.getElementById('searchBar').addEventListener('input', (e) => {
+    document.getElementById('searchBar').addEventListener('input', function(e) {
       searchQuery = e.target.value.toLowerCase();
       displayVideos();
     });
 
-    // Video player
     function openVideoPlayer(video) {
-      const modal = document.getElementById('videoPlayerModal');
+      previousPage = 'youtube';
+      
       const iframe = document.getElementById('playerIframe');
       const title = document.getElementById('playerVideoTitle');
       const description = document.getElementById('playerVideoDescription');
+      const date = document.getElementById('playerVideoDate');
 
       const videoId = video.id.videoId || video.id;
       const embedUrl = video.id.kind === 'youtube#playlist' 
-        ? `https://www.youtube.com/embed/videoseries?list=${video.id.playlistId}`
-        : `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        ? 'https://www.youtube.com/embed/videoseries?list=' + video.id.playlistId
+        : 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
 
       iframe.src = embedUrl;
       title.textContent = video.snippet.title;
-      description.textContent = video.snippet.description;
-      modal.classList.remove('hidden');
-      modal.style.display = 'flex';
+      description.textContent = video.snippet.description || 'Aucune description disponible';
+      
+      const publishDate = new Date(video.snippet.publishedAt);
+      const dateOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
+      date.textContent = publishDate.toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'en-US', dateOptions);
+      
+      pages.forEach(function(page) {
+        page.classList.add('hidden');
+      });
+      document.getElementById('videoPage').classList.remove('hidden');
     }
 
-    function closeVideoPlayer() {
-      const modal = document.getElementById('videoPlayerModal');
-      const iframe = document.getElementById('playerIframe');
-      iframe.src = '';
-      modal.classList.add('hidden');
-      modal.style.display = 'none';
-    }
-
-    document.getElementById('closePlayerBtn').addEventListener('click', closeVideoPlayer);
-    document.getElementById('videoPlayerModal').addEventListener('click', (e) => {
-      if (e.target.id === 'videoPlayerModal') {
-        closeVideoPlayer();
-      }
+    document.getElementById('backToVideosBtn').addEventListener('click', function() {
+      document.getElementById('playerIframe').src = '';
+      pages.forEach(function(page) {
+        page.classList.add('hidden');
+      });
+      document.getElementById(previousPage + 'Page').classList.remove('hidden');
     });
 
-    // Display videos with filters
     function displayVideos() {
       const videoGrid = document.getElementById('videoGrid');
       
@@ -739,77 +871,85 @@
         return;
       }
 
-      let filteredVideos = [...allVideos];
+      let filteredVideos = allVideos.slice();
 
-      // Apply search filter
       if (searchQuery) {
-        filteredVideos = filteredVideos.filter(video => 
-          video.snippet.title.toLowerCase().includes(searchQuery) ||
-          video.snippet.description.toLowerCase().includes(searchQuery)
-        );
+        filteredVideos = filteredVideos.filter(function(video) {
+          const titleMatch = video.snippet.title.toLowerCase().includes(searchQuery);
+          const descMatch = video.snippet.description && video.snippet.description.toLowerCase().includes(searchQuery);
+          return titleMatch || descMatch;
+        });
       }
 
-      // Apply category filter
       switch(currentFilter) {
         case 'recent':
-          filteredVideos.sort((a, b) => 
-            new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt)
-          );
+          filteredVideos.sort(function(a, b) {
+            return new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt);
+          });
           break;
         case 'shorts':
-          filteredVideos = filteredVideos.filter(video => 
-            video.contentDetails && video.contentDetails.duration && 
-            parseDuration(video.contentDetails.duration) <= 60
-          );
+          filteredVideos = filteredVideos.filter(function(video) {
+            return video.contentDetails && video.contentDetails.duration && 
+              parseDuration(video.contentDetails.duration) <= 60;
+          });
           break;
         case 'playlist':
-          filteredVideos = filteredVideos.filter(video => 
-            video.id.kind === 'youtube#playlist'
-          );
+          filteredVideos = filteredVideos.filter(function(video) {
+            return video.id.kind === 'youtube#playlist';
+          });
           break;
         case 'random':
-          filteredVideos = shuffleArray(filteredVideos);
-          break;
-        case 'foryou':
           filteredVideos = shuffleArray(filteredVideos);
           break;
       }
 
       if (filteredVideos.length === 0) {
-        videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">Aucune vidéo trouvée</div>';
+        videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">No videos found</div>';
         return;
       }
 
-      videoGrid.innerHTML = filteredVideos.map(video => {
+      videoGrid.innerHTML = filteredVideos.map(function(video, index) {
         const videoId = video.id.videoId || video.id.playlistId || video.id;
         const title = video.snippet.title;
         const thumbnail = video.snippet.thumbnails.high.url;
-        const description = video.snippet.description.substring(0, 100) + '...';
-        const publishedAt = new Date(video.snippet.publishedAt).toLocaleDateString('fr-FR');
+        const description = video.snippet.description ? video.snippet.description.substring(0, 80) + '...' : 'No description';
+        const publishDate = new Date(video.snippet.publishedAt);
+        const dateOptions = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+        const publishedAt = publishDate.toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'en-US', dateOptions);
         const duration = video.contentDetails ? formatDuration(video.contentDetails.duration) : '';
 
-        return `
-          <div class="video-card" onclick='openVideoPlayer(${JSON.stringify(video).replace(/'/g, "&#39;")})'>
-            <div class="relative">
-              <img src="${thumbnail}" alt="${title}" class="video-thumbnail" onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none';">
-              ${duration ? `<span class="video-duration">${duration}</span>` : ''}
-            </div>
-            <div class="video-info">
-              <h3 class="text-white font-semibold mb-2">${title}</h3>
-              <p class="text-white/60 text-sm mb-2">${description}</p>
-              <p class="video-date">${publishedAt}</p>
-            </div>
-          </div>
-        `;
+        return '<div class="video-card" data-video-index="' + index + '">' +
+          '<div class="relative">' +
+          '<img src="' + thumbnail + '" alt="' + title.replace(/"/g, '&quot;') + '" class="video-thumbnail" onerror="this.src=\'\'; this.alt=\'Image failed to load\'; this.style.display=\'none\';">' +
+          (duration ? '<span class="video-duration">' + duration + '</span>' : '') +
+          '</div>' +
+          '<div class="video-info">' +
+          '<h3 class="text-white font-semibold mb-2 line-clamp-2">' + title + '</h3>' +
+          '<p class="text-white/60 text-xs sm:text-sm mb-2 line-clamp-2">' + description + '</p>' +
+          '<p class="video-date">' + publishedAt + '</p>' +
+          '</div>' +
+          '</div>';
       }).join('');
+
+      document.querySelectorAll('.video-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          const index = parseInt(card.getAttribute('data-video-index'));
+          openVideoPlayer(filteredVideos[index]);
+        });
+      });
     }
 
-    // Helper functions
     function shuffleArray(array) {
-      const shuffled = [...array];
+      const shuffled = array.slice();
       for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        const temp = shuffled[i];
+        shuffled[i] = shuffled[j];
+        shuffled[j] = temp;
       }
       return shuffled;
     }
@@ -829,82 +969,91 @@
       const secs = seconds % 60;
       
       if (hours > 0) {
-        return `${hours}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        return hours + ':' + String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
       }
-      return `${minutes}:${String(secs).padStart(2, '0')}`;
+      return minutes + ':' + String(secs).padStart(2, '0');
     }
 
-    // Load YouTube videos
     async function loadYouTubeVideos() {
+      if (allVideos.length > 0) {
+        displayVideos();
+        return;
+      }
+
       const videoGrid = document.getElementById('videoGrid');
       const channelId = defaultConfig.youtube_channel_id;
       const apiKey = defaultConfig.youtube_api_key;
 
       if (!apiKey) {
-        videoGrid.innerHTML = `
-          <div class="col-span-full text-white text-center">
-            <p class="text-xl mb-4">⚙️ Configuration requise</p>
-            <p class="text-white/70">Veuillez ajouter votre clé API YouTube dans les paramètres éditables pour afficher les vidéos.</p>
-            <a href="https://www.youtube.com/@Krismeow" target="_blank" rel="noopener noreferrer" 
-               class="inline-block mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full transition-all">
-              Visiter la chaîne YouTube →
-            </a>
-          </div>
-        `;
+        const linkText = currentLanguage === 'fr' ? 'Visiter la chaîne YouTube →' : 'Visit YouTube Channel →';
+        const configText = currentLanguage === 'fr' ? '⚙️ Configuration requise' : '⚙️ Configuration required';
+        const instrText = currentLanguage === 'fr' 
+          ? 'Veuillez ajouter votre clé API YouTube dans les paramètres éditables pour afficher les vidéos.'
+          : 'Please add your YouTube API key in the editable settings to display videos.';
+        
+        videoGrid.innerHTML = '<div class="col-span-full text-white text-center">' +
+          '<p class="text-lg sm:text-xl mb-4">' + configText + '</p>' +
+          '<p class="text-white/70 text-sm sm:text-base">' + instrText + '</p>' +
+          '<a href="https://www.youtube.com/@Krismeow" target="_blank" rel="noopener noreferrer" ' +
+          'class="inline-block mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full transition-all">' +
+          linkText +
+          '</a>' +
+          '</div>';
         return;
       }
 
       try {
-        // Fetch videos
         const videosResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet&order=date&maxResults=50&type=video`
+          'https://www.googleapis.com/youtube/v3/search?key=' + apiKey + '&channelId=' + channelId + '&part=snippet&order=date&maxResults=50&type=video'
         );
         const videosData = await videosResponse.json();
 
-        // Fetch playlists
         const playlistsResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/playlists?key=${apiKey}&channelId=${channelId}&part=snippet&maxResults=10`
+          'https://www.googleapis.com/youtube/v3/playlists?key=' + apiKey + '&channelId=' + channelId + '&part=snippet&maxResults=10'
         );
         const playlistsData = await playlistsResponse.json();
 
         if (videosData.items) {
-          // Get video durations
-          const videoIds = videosData.items.map(item => item.id.videoId).join(',');
+          const videoIds = videosData.items.map(function(item) {
+            return item.id.videoId;
+          }).join(',');
+          
           const detailsResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=contentDetails`
+            'https://www.googleapis.com/youtube/v3/videos?key=' + apiKey + '&id=' + videoIds + '&part=contentDetails'
           );
           const detailsData = await detailsResponse.json();
 
-          // Merge duration data
-          videosData.items.forEach((video, index) => {
-            const details = detailsData.items.find(d => d.id === video.id.videoId);
+          videosData.items.forEach(function(video) {
+            const details = detailsData.items.find(function(d) {
+              return d.id === video.id.videoId;
+            });
             if (details) {
               video.contentDetails = details.contentDetails;
             }
           });
 
-          allVideos = [...videosData.items];
+          allVideos = videosData.items.slice();
           
           if (playlistsData.items) {
-            allVideos = [...allVideos, ...playlistsData.items];
+            allVideos = allVideos.concat(playlistsData.items);
           }
 
           displayVideos();
         } else {
-          videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">Aucune vidéo trouvée</div>';
+          const noVideosText = currentLanguage === 'fr' ? 'Aucune vidéo trouvée' : 'No videos found';
+          videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">' + noVideosText + '</div>';
         }
       } catch (error) {
-        videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">Erreur lors du chargement des vidéos</div>';
+        const errorText = currentLanguage === 'fr' ? 'Erreur lors du chargement des vidéos' : 'Error loading videos';
+        videoGrid.innerHTML = '<div class="col-span-full text-white text-center text-xl">' + errorText + '</div>';
         console.error('Error loading videos:', error);
       }
     }
 
-    // Initialize
     createStars();
     moveAIBubble();
     updateLanguage();
 
-    // Elements SDK Integration
     async function onConfigChange(config) {
       const siteName = config.site_name || defaultConfig.site_name;
       const aiName = config.ai_name || defaultConfig.ai_name;
@@ -917,49 +1066,61 @@
       defaultConfig.youtube_api_key = config.youtube_api_key || defaultConfig.youtube_api_key;
       defaultConfig.youtube_channel_id = config.youtube_channel_id || defaultConfig.youtube_channel_id;
       
+      allVideos = [];
+      
       updateLanguage();
     }
 
     if (window.elementSdk) {
       window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities: (config) => ({
-          recolorables: [
-            {
-              get: () => config.background_color || defaultConfig.background_color,
-              set: (value) => {
-                config.background_color = value;
-                window.elementSdk.setConfig({ background_color: value });
+        defaultConfig: defaultConfig,
+        onConfigChange: onConfigChange,
+        mapToCapabilities: function(config) {
+          return {
+            recolorables: [
+              {
+                get: function() {
+                  return config.background_color || defaultConfig.background_color;
+                },
+                set: function(value) {
+                  config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                }
+              },
+              {
+                get: function() {
+                  return config.ai_bubble_color || defaultConfig.ai_bubble_color;
+                },
+                set: function(value) {
+                  config.ai_bubble_color = value;
+                  window.elementSdk.setConfig({ ai_bubble_color: value });
+                }
+              },
+              {
+                get: function() {
+                  return config.text_color || defaultConfig.text_color;
+                },
+                set: function(value) {
+                  config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                }
               }
-            },
-            {
-              get: () => config.ai_bubble_color || defaultConfig.ai_bubble_color,
-              set: (value) => {
-                config.ai_bubble_color = value;
-                window.elementSdk.setConfig({ ai_bubble_color: value });
-              }
-            },
-            {
-              get: () => config.text_color || defaultConfig.text_color,
-              set: (value) => {
-                config.text_color = value;
-                window.elementSdk.setConfig({ text_color: value });
-              }
-            }
-          ],
-          borderables: [],
-          fontEditable: undefined,
-          fontSizeable: undefined
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ['site_name', config.site_name || defaultConfig.site_name],
-          ['ai_name', config.ai_name || defaultConfig.ai_name],
-          ['youtube_api_key', config.youtube_api_key || defaultConfig.youtube_api_key],
-          ['youtube_channel_id', config.youtube_channel_id || defaultConfig.youtube_channel_id]
-        ])
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          };
+        },
+        mapToEditPanelValues: function(config) {
+          return new Map([
+            ['site_name', config.site_name || defaultConfig.site_name],
+            ['ai_name', config.ai_name || defaultConfig.ai_name],
+            ['youtube_api_key', config.youtube_api_key || defaultConfig.youtube_api_key],
+            ['youtube_channel_id', config.youtube_channel_id || defaultConfig.youtube_channel_id]
+          ]);
+        }
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b994283b092739a',t:'MTc2NzY4MjAwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b99a956169a4ed3',t:'MTc2NzY4NjIxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
